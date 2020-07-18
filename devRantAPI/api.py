@@ -1,4 +1,9 @@
-"""devRant API"""
+"""
+Author: Deepak Talan
+Github: @d02d33pak
+devRant API
+"""
+
 import json
 import requests
 from devRantAPI.urls import URLs
@@ -37,7 +42,7 @@ class DevRant:
 
     def get_user_profile(self, user_id: int):
         """Get complete profile of the User by their user-if"""
-        url = self.url_builder.get_user_info_url(user_id)
+        url = self.url_builder.get_user_profile_url(user_id)
         response = json.loads(requests.get(url).text)
         if response["success"]:
             return response["profile"]
@@ -58,6 +63,8 @@ class DevRant:
             "skills": response["skills"],
             "github": response["github"],
             "website": response["website"],
+            "counts": response["content"]["counts"],
+            "dpp": response["dpp"],
         }
         return info
 
@@ -75,3 +82,27 @@ class DevRant:
             return self.url_builder.get_user_avatar_url(response["avatar"]["i"])
         else:
             return "size = small/large"
+
+    def get_weekly_rant(self, sort: str = "algo", skip: int = 0):
+        """get weekly rants based on algo"""
+        url = self.url_builder.get_weekly_url(sort, skip)
+        response = json.loads(requests.get(url).text)
+        if response["success"]:
+            return response
+        return None
+
+    def get_collabs(self, skip: int = 0, limit: int = 10):
+        """get collabs"""
+        url = self.url_builder.get_collabs_url(skip, limit)
+        response = json.loads(requests.get(url).text)
+        if response["success"]:
+            return response
+        return None
+
+    def get_search_results(self, search_term: str):
+        """get rants based on search term"""
+        url = self.url_builder.get_search_url(search_term)
+        response = json.loads(requests.get(url).text)
+        if response["success"]:
+            return response
+        return None
