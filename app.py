@@ -38,7 +38,7 @@ def run():
     # print(avatar)
 
     # LOGIN
-    print(auth.login("d02d33pak", "qwerty529"))
+    print(auth.login("", ""))
 
     # POST COMMENT
     # print(auth.post_comment(2780108, "api comment"))
