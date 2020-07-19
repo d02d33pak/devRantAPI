@@ -4,6 +4,8 @@ Github: @d02d33pak
 all URLs
 """
 
+import time
+
 
 class URLs:
     """url class"""
@@ -13,13 +15,16 @@ class URLs:
         self.base_url = "https://devrant.com/api/"
         self.app_id = "?app=3"
         self.rants_url = "devrant/rants"
-        self.single_rant_url = "devrant/rants/"
+        self.comment_url = "/comments"
+        self.vote_url = "/vote"
         self.user_id = "get-user-id"
         self.user_profile = "users/"
         self.user_avatar = "https://avatars.devrant.com/"
         self.weekly_rants = "devrant/weekly-rant"
         self.collabs = "devrant/collabs"
         self.search = "devrant/search"
+        ###AUTH URLs###
+        self.login = "users/auth-token"
 
     def get_rants_url(self, sort, limit, skip):
         """multi rants"""
@@ -30,7 +35,7 @@ class URLs:
 
     def get_rant_by_id_url(self, rant_id):
         """single rant"""
-        return f"{self.base_url}{self.single_rant_url}{rant_id}{self.app_id}"
+        return f"{self.base_url}{self.rants_url}/{rant_id}{self.app_id}"
 
     def get_user_id_url(self, username):
         """return user_id url"""
@@ -66,8 +71,70 @@ class URLs:
             return sort
         raise ValueError("Invalid Sort Type")
 
-    def validate_int(self, num):
+    @staticmethod
+    def validate_int(num):
         """validate any int input"""
         if num >= 0:
             return num
         raise ValueError("Limit/Skip should be positive Integers")
+
+    def get_login_url(self, username, password):
+        """return login url"""
+        url = f"{self.base_url}{self.login}"
+        params = {
+            "app": 3,
+            "username": username,
+            "password": password,
+            "plat": 3,
+            "sid": time.time(),
+        }
+        return url, params
+
+    def get_post_rant_url(self, body, tags, category, uid, token_id, token_key):
+        """reuturn post rant url"""
+        url = f"{self.base_url}{self.rants_url}"
+        params = {
+            "app": 3,
+            "rant": body,
+            "tags": tags,
+            "type": category,
+            "user_id": uid,
+            "token_id": token_id,
+            "token_key": token_key,
+        }
+        return url, params
+
+    def get_post_comment_url(self, rant_id, body, uid, token_id, token_key):
+        """reuturn post comment url"""
+        url = f"{self.base_url}{self.rants_url}/{rant_id}{self.comment_url}"
+        params = {
+            "app": 3,
+            "comment": body,
+            "user_id": uid,
+            "token_id": token_id,
+            "token_key": token_key,
+            "plat": 3,
+        }
+        return url, params
+
+    def get_vote_url(self, ele_id, mode, value, uid, token_id, token_key):
+        """return vote url"""
+
+        if mode == "rant":
+            url = f"{self.base_url}{self.rants_url}/{ele_id}{self.vote_url}"
+        elif mode == "comment":
+            url = f"{self.base_url}{self.comment_url}/{ele_id}{self.vote_url}"
+        params = {
+            "app": 3,
+            "vote": value,
+            "user_id": uid,
+            "token_id": token_id,
+            "token_key": token_key,
+            "plat": 3,
+            "sid": time.time(),
+        }
+
+        if value == -1:
+            params["reason"] = 0 # if user is downvoting, reason needs to be provided
+
+        return url, params

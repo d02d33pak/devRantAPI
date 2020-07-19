@@ -99,6 +99,10 @@ class DevRant:
             return response
         return None
 
+    def get_collab_by_id(self, collab_id):
+        """Get collab by collab_id"""
+        self.get_rant_by_id(collab_id)
+
     def get_search_results(self, search_term: str):
         """get rants based on search term"""
         url = self.url_builder.get_search_url(search_term)
@@ -106,3 +110,60 @@ class DevRant:
         if response["success"]:
             return response
         return None
+
+
+class DevAuth:
+    """everything related to auth and interacting with devrant"""
+
+    def __init__(self):
+        """Initializing class vars"""
+        self.url_builder = URLs()
+        self.uid = None
+        self.token_id = None
+        self.token_key = None
+
+    def login(self, username: str, password: str):
+        """login"""
+        url, data = self.url_builder.get_login_url(username, password)
+        response = json.loads(requests.post(url, data=data).text)
+        if response["success"]:
+            self.uid = response["auth_token"]["user_id"]
+            self.token_id = response["auth_token"]["id"]
+            self.token_key = response["auth_token"]["key"]
+            return True
+        return False
+
+    def post_rant(self, body: str, tags: list = None, category: str = "rant"):
+        """post rant"""
+        url, data = self.url_builder.get_post_rant_url(
+            body, tags, category, self.uid, self.token_id, self.token_key
+        )
+        response = json.loads(requests.post(url, data=data).text)
+        if response["success"]:
+            return response
+        return None
+
+    def post_comment(self, rant_id: int, body: str):
+        """post comment"""
+        url, data = self.url_builder.get_post_comment_url(
+            rant_id, body, self.uid, self.token_id, self.token_key
+        )
+        response = json.loads(requests.post(url, data=data).text)
+        if response["success"]:
+            return True
+        return response["error"]
+
+    def vote(self, ele_id: int, mode: str = "rant", value: int = 1):
+        """vote on rant/comment"""
+        url, data = self.url_builder.get_vote_url(
+            ele_id, mode, value, self.uid, self.token_id, self.token_key
+        )
+        print(url, data)
+        response = json.loads(requests.post(url, data=data).text)
+        return response
+
+    def get_notifications(self):
+        """get notifs"""
+
+    def clear_notifications(self):
+        """clear notifs"""
