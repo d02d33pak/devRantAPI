@@ -1,5 +1,6 @@
 """main func"""
 from devRantAPI.api import DevRant, DevAuth
+import utils
 
 
 def run():
@@ -18,8 +19,8 @@ def run():
     # print(rant["text"])
 
     # GET USER ID FROM USERNAME
-    # user_id = dev.get_user_id("d02d33pak")
-    # print(user_id)
+    user_id = dev.get_user_id("d02d33pak")
+    print(user_id)
 
     # GET USER PROFILE FROM USER ID
     # data = dev.get_user_profile(user_id)
@@ -38,13 +39,23 @@ def run():
     # print(avatar)
 
     # LOGIN
-    print(auth.login("", ""))
+    print(auth.login(utils.USERNAME, utils.PASSWORD))
+
+    # POST RANT
+    # rant = auth.post_rant("ranting from api")
+    # print(rant)
 
     # POST COMMENT
-    # print(auth.post_comment(2780108, "api comment"))
+    # print(auth.post_comment(rant, "commenting from api"))
 
     # VOTE ON RANT
-    print(auth.vote(2780108))
+    print(auth.vote(2783478))
+
+    # PRINT POSTED RANT
+    # print(dev.get_rant_by_id(rant))
+
+    # DELETE COMMENT
+    # print(auth.delete_rant(rant))
 
 
 if __name__ == "__main__":

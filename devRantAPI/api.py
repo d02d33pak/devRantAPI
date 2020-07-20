@@ -17,7 +17,13 @@ class DevRant:
         self.url_builder = URLs()
 
     def get_rants(self, sort: str = "algo", limit: int = 10, skip: int = 0):
-        """Get rants with limit, skip"""
+        """
+        Get a list of rants
+        Optional params:
+            sort    [algo, top, recent] sort rants by sort method
+            limit   [0 < x < 51] no. of rants to fetch, default = 10
+            skip    [x >= 0] no. of first N rants to skip, default = 0
+        """
         url = self.url_builder.get_rants_url(sort, limit, skip)
         response = json.loads(requests.get(url).text)
         if response["success"]:
@@ -25,7 +31,7 @@ class DevRant:
         return None
 
     def get_rant_by_id(self, rant_id: int):
-        """Get rant by rant_id"""
+        """Get rant by its rant id."""
         url = self.url_builder.get_rant_by_id_url(rant_id)
         response = json.loads(requests.get(url).text)
         if response["success"]:
@@ -119,8 +125,8 @@ class DevAuth:
         """Initializing class vars"""
         self.url_builder = URLs()
         self.uid = None
-        self.token_id = None
-        self.token_key = None
+        self.token = None
+        self.key = None
 
     def login(self, username: str, password: str):
         """login"""
@@ -128,25 +134,25 @@ class DevAuth:
         response = json.loads(requests.post(url, data=data).text)
         if response["success"]:
             self.uid = response["auth_token"]["user_id"]
-            self.token_id = response["auth_token"]["id"]
-            self.token_key = response["auth_token"]["key"]
+            self.token = response["auth_token"]["id"]
+            self.key = response["auth_token"]["key"]
             return True
         return False
 
-    def post_rant(self, body: str, tags: list = None, category: str = "rant"):
+    def post_rant(self, body: str, tags: str = "", category: int = 1):
         """post rant"""
         url, data = self.url_builder.get_post_rant_url(
-            body, tags, category, self.uid, self.token_id, self.token_key
+            body, tags, category, self.uid, self.token, self.key
         )
         response = json.loads(requests.post(url, data=data).text)
         if response["success"]:
-            return response
+            return response["rant_id"]
         return None
 
     def post_comment(self, rant_id: int, body: str):
         """post comment"""
         url, data = self.url_builder.get_post_comment_url(
-            rant_id, body, self.uid, self.token_id, self.token_key
+            rant_id, body, self.uid, self.token, self.key
         )
         response = json.loads(requests.post(url, data=data).text)
         if response["success"]:
@@ -156,14 +162,33 @@ class DevAuth:
     def vote(self, ele_id: int, mode: str = "rant", value: int = 1):
         """vote on rant/comment"""
         url, data = self.url_builder.get_vote_url(
-            ele_id, mode, value, self.uid, self.token_id, self.token_key
+            ele_id, mode, value, self.uid, self.token, self.key
         )
-        print(url, data)
         response = json.loads(requests.post(url, data=data).text)
+        if response["success"]:
+            return True
+        return False
+
+    def delete_rant(self, rant_id: int, mode: str = "rant"):
+        """delete post made by user"""
+        url, params = self.url_builder.get_delete_rant_url(
+            rant_id, mode, self.uid, self.token, self.key
+        )
+        response = json.loads(requests.delete(url, params=params).text)
         return response
+
+    def delete_comment(self, comment_id: int, mode: str = "comment"):
+        """delete comment made by user"""
+        self.delete_rant(comment_id, mode)
 
     def get_notifications(self):
         """get notifs"""
+        url = self.url_builder.get_notif_url(self.uid, self.token, self.key)
+        response = json.loads(requests.get(url).text)
+        return response
 
     def clear_notifications(self):
         """clear notifs"""
+        url = self.url_builder.get_notif_url(self.uid, self.token, self.key)
+        response = json.loads(requests.delete(url).text)
+        return response
