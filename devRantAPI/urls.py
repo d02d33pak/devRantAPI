@@ -15,18 +15,18 @@ class URLs:
         # BASE
         self.base_url = "https://devrant.com/api/"
         # RANT RELATED
-        self.app_id = "?app=3"
-        self.rants_url = "devrant/rants"
+        self.app_id      = "?app=3"
+        self.rants_url   = "devrant/rants"
         self.comment_url = "/comments"
-        self.vote_url = "/vote"
+        self.vote_url    = "/vote"
         # USER RELATED
-        self.user_id = "get-user-id"
+        self.user_id      = "get-user-id"
         self.user_profile = "users/"
-        self.user_avatar = "https://avatars.devrant.com/"
+        self.user_avatar  = "https://avatars.devrant.com/"
         # MISC
         self.weekly_rants = "devrant/weekly-rant"
-        self.collabs = "devrant/collabs"
-        self.search = "devrant/search"
+        self.collabs      = "devrant/collabs"
+        self.search       = "devrant/search"
         # LOGIN RELATED
         self.login = "users/auth-token"
         self.notif = "users/me/notif-feed"
@@ -87,11 +87,11 @@ class URLs:
         """Generate a request URL to login to devRant."""
         url = f"{self.base_url}{self.login}"
         params = {
-            "app": 3,
+            "app"     : 3,
             "username": username,
             "password": password,
-            "plat": 3,
-            "sid": time.time(),
+            "plat"    : 3,
+            "sid"     : time.time(),
         }
         return url, params
 
@@ -99,12 +99,12 @@ class URLs:
         """Generate a request URL to post a rant."""
         url = f"{self.base_url}{self.rants_url}"
         params = {
-            "app": 3,
-            "type": category,
-            "rant": body,
-            "tags": tags,
-            "user_id": uid,
-            "token_id": token,
+            "app"      : 3,
+            "type"     : category,
+            "rant"     : body,
+            "tags"     : tags,
+            "user_id"  : uid,
+            "token_id" : token,
             "token_key": key,
         }
         return url, params
@@ -113,12 +113,12 @@ class URLs:
         """Generate a request URL to post comment on a rant."""
         url = f"{self.base_url}{self.rants_url}/{rant_id}{self.comment_url}"
         params = {
-            "app": 3,
-            "comment": body,
-            "user_id": uid,
-            "token_id": token,
+            "app"      : 3,
+            "comment"  : body,
+            "user_id"  : uid,
+            "token_id" : token,
             "token_key": key,
-            "plat": 3,
+            "plat"     : 3,
         }
         return url, params
 
@@ -129,13 +129,13 @@ class URLs:
         elif mode == "comment":
             url = f"{self.base_url}{self.comment_url}/{ele_id}{self.vote_url}"
         params = {
-            "app": 3,
-            "vote": value,
-            "user_id": uid,
-            "token_id": token,
+            "app"      : 3,
+            "vote"     : value,
+            "user_id"  : uid,
+            "token_id" : token,
             "token_key": key,
-            "plat": 3,
-            "sid": time.time(),
+            "plat"     : 3,
+            "sid"      : time.time(),
         }
         if value == -1:
             params["reason"] = 0  # if user is downvoting, reason needs to be provided
@@ -149,12 +149,12 @@ class URLs:
         elif mode == "comment":
             url = f"{self.base_url}{self.comment_url}/{rant_id}"
         params = {
-            "app": 3,
-            "user_id": uid,
-            "token_id": token,
+            "app"      : 3,
+            "user_id"  : uid,
+            "token_id" : token,
             "token_key": key,
-            "plat": 3,
-            "sid": time.time(),
+            "plat"     : 3,
+            "sid"      : time.time(),
         }
         return url, params
 
@@ -162,9 +162,9 @@ class URLs:
         """Generate a request URL to get notification feed."""
         url = f"{self.base_url}{self.notif}"
         params = {
-            "app": 3,
-            "user_id": uid,
-            "token_id": token,
+            "app"      : 3,
+            "user_id"  : uid,
+            "token_id" : token,
             "token_key": key,
         }
         return url, params
