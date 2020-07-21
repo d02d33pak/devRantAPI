@@ -13,16 +13,17 @@ class DevRant:
     """API Class providing Interface methods"""
 
     def __init__(self):
-        """Initializing class vars"""
+        """Initializing class vars."""
         self.url_builder = URLs()
 
     def get_rants(self, sort: str = "algo", limit: int = 10, skip: int = 0):
         """
-        Get a list of rants
-        Optional params:
-            sort :  [algo, top, recent] sort rants by sort method
-            limit:  [0 < x < 51] no. of rants to fetch, default = 10
-            skip :  [x >= 0] no. of first N rants to skip, default = 0
+        Returns a list of rants.
+
+        Optional parameters:
+            sort (str) : Sort rants by [algo, top, recent], default = algo
+            limit (int) : No. of rants to fetch, max = 50, default = 10
+            skip (int) : No. of first N rants to skip, default = 0
         """
         url = self.url_builder.get_rants_url(sort, limit, skip)
         response = json.loads(requests.get(url).text)
@@ -31,7 +32,12 @@ class DevRant:
         return None
 
     def get_rant_by_id(self, rant_id: int):
-        """Get rant by its rant id."""
+        """
+        Returns a single rant by its rant id.
+
+        Parameters:
+            rant_id (int) : ID of the rant to be fetched
+        """
         url = self.url_builder.get_rant_by_id_url(rant_id)
         response = json.loads(requests.get(url).text)
         if response["success"]:
@@ -39,7 +45,12 @@ class DevRant:
         return None
 
     def get_user_id(self, username: str):
-        """Get user id from username"""
+        """
+        Returns user id from username.
+
+        Parameters:
+            username (str) : Username
+        """
         url = self.url_builder.get_user_id_url(username)
         response = json.loads(requests.get(url).text)
         if response["success"]:
@@ -47,7 +58,12 @@ class DevRant:
         return None
 
     def get_user_profile(self, user_id: int):
-        """Get complete profile of the User by their user id."""
+        """
+        Returns complete Profile of the User by their user id.
+
+        Parameters:
+            user_id (int) : User ID
+        """
         url = self.url_builder.get_user_profile_url(user_id)
         response = json.loads(requests.get(url).text)
         if response["success"]:
@@ -55,32 +71,49 @@ class DevRant:
         return None
 
     # BREAKING DOWN USER PROFILE FUNCTION INTO 2 SECTIONS
-    # ONE THAT GETS ONLY USER INFO AND THE SECOND ONE THAT GETS ONLY CONTENT
+    # ONE THAT GETS ONLY USER INFO AND
+    # THE SECOND ONE THAT GETS ONLY CONTENT
 
     def get_user_info(self, user_id: int):
-        """Only get user info like bio, and counts [everytihing except rants]."""
+        """
+        Returns users info like username, about, github, website, etc and counts.
+
+        Parameters:
+            user_id (int) : User ID
+        """
         response = self.get_user_profile(user_id)
         info = {
-            "username"    : response["username"],
-            "score"       : response["score"],
-            "about"       : response["about"],
-            "location"    : response["location"],
+            "username": response["username"],
+            "score": response["score"],
+            "about": response["about"],
+            "location": response["location"],
             "created_time": response["created_time"],
-            "skills"      : response["skills"],
-            "github"      : response["github"],
-            "website"     : response["website"],
-            "counts"      : response["content"]["counts"],
-            "dpp"         : response["dpp"],
+            "skills": response["skills"],
+            "github": response["github"],
+            "website": response["website"],
+            "counts": response["content"]["counts"],
+            "dpp": response["dpp"],
         }
         return info
 
     def get_user_data(self, user_id: int):
-        """Only get user content[] rants, upvoted, comments, favs, counts[]."""
+        """
+        Returns users content i.e., rants and comments and counts.
+
+        Parameters:
+            user_id (int) : User ID
+        """
         response = self.get_user_profile(user_id)
         return response["content"]
 
     def get_user_avatar(self, user_id: int, image_size: str = "small"):
-        """Get user avatar image url, provided the imagesize."""
+        """
+        Returns user avatar's png image url.
+
+        Parameters:
+            user_id (int) : User ID
+            image_size (str) : Size of the avatar to be fetched [small/large]
+        """
         response = self.get_user_profile(user_id)
         if image_size == "small":
             return self.url_builder.get_user_avatar_url(response["avatar_sm"]["i"])
@@ -90,10 +123,11 @@ class DevRant:
 
     def get_weekly_rant(self, sort: str = "algo", skip: int = 0):
         """
-        Get list of weekly rants.
-        Optional params:
-            sort: [algo, top, recent] sort rants by sort method
-            skip: [x >= 0] no. of first N rants to skip, default = 0
+        Returns a list of all weekly rants.
+
+        Optional parameters:
+            sort (str) : Sort rants by [algo, top, recent], default = algo
+            skip (int) : No. of first N rants to skip, default = 0
         """
         url = self.url_builder.get_weekly_url(sort, skip)
         response = json.loads(requests.get(url).text)
@@ -101,12 +135,13 @@ class DevRant:
             return response
         return None
 
-    def get_collabs(self, skip: int = 0, limit: int = 10):
+    def get_collabs(self, limit: int = 10, skip: int = 0,):
         """
-        Get a list of available collabs.
-        Optional params:
-            limit: [0 < x < 51] no. of rants to fetch, default = 10
-            skip : [x >= 0] no. of first N rants to skip, default = 0
+        Returns a list of available collabs.
+
+        Optional parameters:
+            limit (int) : No. of rants to fetch, max = 50, default = 10
+            skip (int) : No. of first N rants to skip, default = 0
         """
         url = self.url_builder.get_collabs_url(skip, limit)
         response = json.loads(requests.get(url).text)
@@ -115,11 +150,21 @@ class DevRant:
         return None
 
     def get_collab_by_id(self, collab_id):
-        """Get collab by its rant id."""
+        """
+        Returns collaboration rant by its rant id.
+
+        Parameters:
+            collab_id (int) : Rant ID of the collab
+        """
         self.get_rant_by_id(collab_id)
 
     def get_search_results(self, search_term: str):
-        """Get list of rants matching the given search term."""
+        """
+        Returns list of rants matching the search term.
+
+        Parameters:
+            search_term (str) : Search term to be looked up
+        """
         url = self.url_builder.get_search_url(search_term)
         response = json.loads(requests.get(url).text)
         if response["success"]:
@@ -133,12 +178,18 @@ class DevAuth:
     def __init__(self):
         """Initializing class vars."""
         self.url_builder = URLs()
-        self.uid         = None
-        self.token       = None
-        self.key         = None
+        self.uid = None
+        self.token = None
+        self.key = None
 
     def login(self, username: str, password: str):
-        """Login to devRant with username and password."""
+        """
+        Returns True if Login to devRant is Successful.
+
+        Parameters:
+            username (str) : Username of the user
+            password (str) : Password of ther user
+        """
         url, data = self.url_builder.get_login_url(username, password)
         response = json.loads(requests.post(url, data=data).text)
         if response["success"]:
@@ -150,17 +201,20 @@ class DevAuth:
 
     def post_rant(self, body: str, tags: str = "", category: int = 1):
         """
-        Post rant.
-        Optional params:
-            body    : text/rant to be posted
-            tags    : tags related to the rant, category is automatically appended to tags
-            category: type of rant [1-6]
-                        1 = rant/story [default]
-                        2 = joke/meme
-                        3 = question
-                        4 = collab
+        Returns Rant ID if rant is posted successfully.
+
+        Parameters:
+            body (str) : Text/rant to be posted
+
+        Optional parameters:
+            tags (str) : Tags related to the rant, category is automatically appended to tags
+            category (int) : Type of rant [1-6] being posted
+                        1 = Rant/Story [default]
+                        2 = Joke/Meme
+                        3 = Question
+                        4 = Collab
                         5 = devRant
-                        6 = random
+                        6 = Random
         """
         url, data = self.url_builder.get_post_rant_url(
             body, tags, category, self.uid, self.token, self.key
@@ -171,7 +225,13 @@ class DevAuth:
         return None
 
     def post_comment(self, rant_id: int, body: str):
-        """Post comment on a rant, provided the rant id."""
+        """
+        Returns True if comment is posted on the rant successfully .
+
+        Parameters:
+            rand_id (int) : ID of the rant where comment  needs to be added
+            body (str) : Body of comment
+        """
         url, data = self.url_builder.get_post_comment_url(
             rant_id, body, self.uid, self.token, self.key
         )
@@ -182,13 +242,14 @@ class DevAuth:
 
     def vote(self, ele_id: int, mode: str = "rant", value: int = 1):
         """
-        Vote on rant/comment using its id.
-        params:
-            ele_id: id of rant or comment
-            mode  : whether its a rant or a comment
-            value : 1  = Upvote [default]
-                    0  = Cancel Upvote
-                    -1 = Downvote
+        Returns True if Voting on rant/comment using its id, is done successfully.
+
+        Parameters:
+            ele_id (int) : ID of rant or comment to be voted
+
+        Optional Parameters:
+            mode (str) : Whether its a rant or a comment, default = rant
+            value (int) : 1 = Upvote [default], 0 = Cancel Upvote, -1 = Downvote
         """
         url, data = self.url_builder.get_vote_url(
             ele_id, mode, value, self.uid, self.token, self.key
@@ -199,7 +260,15 @@ class DevAuth:
         return False
 
     def delete_rant(self, rant_id: int, mode: str = "rant"):
-        """Delete rant made by user, given the rant id."""
+        """
+        Returns True if rant is Deleted successfully.
+
+        Parameters:
+            rant_id (int) : ID of the rant to be deleted
+
+        Optional Parameter:
+            mode (str) : Whether its a rant/comment that being deleted, default = rant
+        """
         url, params = self.url_builder.get_delete_rant_url(
             rant_id, mode, self.uid, self.token, self.key
         )
@@ -207,17 +276,29 @@ class DevAuth:
         return response
 
     def delete_comment(self, comment_id: int, mode: str = "comment"):
-        """Delete comment made by user, given the comment id."""
+        """
+        Returns True if comment is Deleted successfully.
+
+        Parameters:
+            rant_id (int) : ID of the comment to be deleted
+
+        Optional Parameter:
+            mode (str) : Whether its a rant/comment that being deleted, default = comment
+        """
         self.delete_rant(comment_id, mode)
 
     def get_notifs(self):
-        """Get notifications."""
+        """
+        Returns list of unread user notifications.
+        """
         url = self.url_builder.get_notif_url(self.uid, self.token, self.key)
         response = json.loads(requests.get(url).text)
         return response
 
     def clear_notifs(self):
-        """Clear notifications."""
+        """
+        Returns True if user notifications are cleared successfully.
+        """
         url = self.url_builder.get_notif_url(self.uid, self.token, self.key)
         response = json.loads(requests.delete(url).text)
         return response

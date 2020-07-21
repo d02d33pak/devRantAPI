@@ -4,7 +4,7 @@ import utils
 
 
 def run():
-    """Calling api."""
+    """Calling API."""
     dev = DevRant()
     auth = DevAuth()
     # GET MULTIPLE RANTS
