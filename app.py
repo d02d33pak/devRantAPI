@@ -4,6 +4,7 @@ Github: @d02d33pak
 App.py
 """
 
+import time
 from devRantAPI.api import DevRant, DevAuth
 import utils
 
@@ -21,7 +22,7 @@ def run():
     rants = dev.get_rants("recent", 3, 0)
     for rant in rants:
         print(rant["id"])
-        print(30 * "-")
+        print(10 * "-")
 
     # GET SINGLE RANT BY ID
     # rant = dev.get_rant_by_id(rant)
@@ -53,15 +54,18 @@ def run():
 
     # POST RANT
     rant = auth.post_rant("ranting from apis")
-    print(rant)
+    print("created rant ->", rant)
 
     # POST COMMENT
     if auth.post_comment(rant, "commenting from api"):
         print("comment posted on", rant)
 
     # VOTE ON RANT
-    if auth.vote(2783478):
-        print("voted")
+    print(auth.unvote(2791146))
+    print("UN voted")
+    # time.sleep(5)
+    # if auth.upvote(2791146):
+    #     print("UP voted")
 
     # PRINT POSTED RANT
     print(dev.get_rant_by_id(rant))
@@ -69,6 +73,9 @@ def run():
     # DELETE COMMENT
     if auth.delete_rant(rant):
         print("deleted", rant)
+
+    # GET NOTIFICATIONS
+    print(auth.get_notifs())
 
 
 if __name__ == "__main__":

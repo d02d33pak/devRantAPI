@@ -242,7 +242,7 @@ class DevAuth:
             return True
         return response["error"]
 
-    def vote(self, ele_id: int, mode: str = "rant", value: int = 1):
+    def upvote(self, ele_id: int, mode: str = "rant", value: int = 1, reason: str = None):
         """
         Returns True if Voting on rant/comment using its id, is done successfully.
 
@@ -251,15 +251,44 @@ class DevAuth:
 
         Optional Parameters:
             mode (str) : Whether its a rant or a comment, default = rant
-            value (int) : 1 = Upvote [default], 0 = Cancel Upvote, -1 = Downvote
+
+        Not be passed if Upvoting:
+            value (int) : 1=Upvote [default], 0=Cancel Upvote, -1=Downvote
+            reason (int) : Reason for downvote [0=Not for me, 1=Repost, 2= Offensive/Spam]
         """
         url, params = self.url_builder.get_vote_url(
-            ele_id, mode, value, self.uid, self.token, self.key
+            ele_id, mode, value, reason, self.uid, self.token, self.key
         )
+        print(url, params, end="\n")
         response = json.loads(requests.post(url, data=params).text)
         if response["success"]:
-            return True
-        return False
+            return response
+        return response
+
+    def unvote(self, ele_id, mode: str = "rant"):
+        """
+        Returns True if Voting on rant/comment using its id, is done successfully.
+
+        Parameters:
+            ele_id (int) : ID of rant or comment to be voted
+
+        Optional Parameters:
+            mode (str) : Whether its a rant or a comment, default = rant
+        """
+        return self.upvote(ele_id, mode, 0)
+
+    def downvote(self, ele_id, reason: int = 0, mode: str = "rant"):
+        """
+        Returns True if DownVoted on rant/comment, using its id, successfully.
+
+        Parameters:
+            ele_id (int) : ID of rant or comment to be voted
+            reason (int) : Reason for downvote [0=Not for me, 1=Repost, 2= Offensive/Spam]
+
+        Optional Parameters:
+            mode (str) : Whether its a rant or a comment, default = rant
+        """
+        return self.upvote(ele_id, mode, -1, reason)
 
     def delete_rant(self, rant_id: int, mode: str = "rant"):
         """

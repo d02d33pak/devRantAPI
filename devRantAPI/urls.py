@@ -132,13 +132,13 @@ class URLs:
         url = f"{self.base_url}{self.rants_url}/{rant_id}{self.comment_url}"
         return url, params
 
-    def get_vote_url(self, ele_id, mode, value, uid, token, key):
+    def get_vote_url(self, ele_id, mode, value, reason, uid, token, key):
         """Generate a request URL to vote on a rant/comment."""
         params = self.create_params(
             vote=value, user_id=uid, token_id=token, token_key=key
         )
-        if value == -1:
-            params["reason"] = 0  # give all reasons
+        if value == -1: # Provide reason for down voting
+            params["reason"] = reason
         if mode == "rant":
             url = f"{self.base_url}{self.rants_url}/{ele_id}{self.vote_url}"
         elif mode == "comment":
