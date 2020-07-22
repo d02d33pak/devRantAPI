@@ -1,26 +1,35 @@
-"""main func"""
+"""
+Author: Deepak Talan
+Github: @d02d33pak
+App.py
+"""
+
 from devRantAPI.api import DevRant, DevAuth
 import utils
 
 
 def run():
-    """Calling API."""
+    """
+    Interacting with the API.
+    For demonstation purposes only.
+    """
+
     dev = DevRant()
     auth = DevAuth()
+
     # GET MULTIPLE RANTS
-    # rants = dev.get_rants("recent", 2, 0)
-    # for rant in rants:
-    #     print(rant["text"])
-    #     print(100 * "-")
-    # print(len(rants))
+    rants = dev.get_rants("recent", 3, 0)
+    for rant in rants:
+        print(rant["id"])
+        print(30 * "-")
 
     # GET SINGLE RANT BY ID
-    # rant = dev.get_rant_by_id(2764787)
-    # print(rant["text"])
+    # rant = dev.get_rant_by_id(rant)
+    # print("posted this rant", rant["text"])
 
     # GET USER ID FROM USERNAME
     user_id = dev.get_user_id("d02d33pak")
-    print(user_id)
+    print("d02d33pak user id =", user_id)
 
     # GET USER PROFILE FROM USER ID
     # data = dev.get_user_profile(user_id)
@@ -39,23 +48,27 @@ def run():
     # print(avatar)
 
     # LOGIN
-    print(auth.login(utils.USERNAME, utils.PASSWORD))
+    if auth.login(utils.USERNAME, utils.PASSWORD):
+        print("logged in")
 
     # POST RANT
-    # rant = auth.post_rant("ranting from api")
-    # print(rant)
+    rant = auth.post_rant("ranting from apis")
+    print(rant)
 
     # POST COMMENT
-    # print(auth.post_comment(rant, "commenting from api"))
+    if auth.post_comment(rant, "commenting from api"):
+        print("comment posted on", rant)
 
     # VOTE ON RANT
-    print(auth.vote(2783478))
+    if auth.vote(2783478):
+        print("voted")
 
     # PRINT POSTED RANT
-    # print(dev.get_rant_by_id(rant))
+    print(dev.get_rant_by_id(rant))
 
     # DELETE COMMENT
-    # print(auth.delete_rant(rant))
+    if auth.delete_rant(rant):
+        print("deleted", rant)
 
 
 if __name__ == "__main__":

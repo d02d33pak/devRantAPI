@@ -10,7 +10,7 @@ from devRantAPI.urls import URLs
 
 
 class DevRant:
-    """API Class providing Interface methods"""
+    """API Class providing Interface methods."""
 
     def __init__(self):
         """Initializing class vars."""
@@ -25,8 +25,8 @@ class DevRant:
             limit (int) : No. of rants to fetch, max = 50, default = 10
             skip (int) : No. of first N rants to skip, default = 0
         """
-        url = self.url_builder.get_rants_url(sort, limit, skip)
-        response = json.loads(requests.get(url).text)
+        url, params = self.url_builder.get_rants_url(sort, limit, skip)
+        response = json.loads(requests.get(url, params=params).text)
         if response["success"]:
             return response["rants"]
         return None
@@ -38,8 +38,8 @@ class DevRant:
         Parameters:
             rant_id (int) : ID of the rant to be fetched
         """
-        url = self.url_builder.get_rant_by_id_url(rant_id)
-        response = json.loads(requests.get(url).text)
+        url, params = self.url_builder.get_rant_by_id_url(rant_id)
+        response = json.loads(requests.get(url, params=params).text)
         if response["success"]:
             return response["rant"]
         return None
@@ -51,8 +51,8 @@ class DevRant:
         Parameters:
             username (str) : Username
         """
-        url = self.url_builder.get_user_id_url(username)
-        response = json.loads(requests.get(url).text)
+        url, params = self.url_builder.get_user_id_url(username)
+        response = json.loads(requests.get(url, params=params).text)
         if response["success"]:
             return response["user_id"]
         return None
@@ -64,8 +64,8 @@ class DevRant:
         Parameters:
             user_id (int) : User ID
         """
-        url = self.url_builder.get_user_profile_url(user_id)
-        response = json.loads(requests.get(url).text)
+        url, params = self.url_builder.get_user_profile_url(user_id)
+        response = json.loads(requests.get(url, params=params).text)
         if response["success"]:
             return response["profile"]
         return None
@@ -137,7 +137,7 @@ class DevRant:
             return response
         return None
 
-    def get_collabs(self, limit: int = 10, skip: int = 0,):
+    def get_collabs(self, limit: int = 10, skip: int = 0):
         """
         Returns a list of available collabs.
 
@@ -192,8 +192,8 @@ class DevAuth:
             username (str) : Username of the user
             password (str) : Password of ther user
         """
-        url, data = self.url_builder.get_login_url(username, password)
-        response = json.loads(requests.post(url, data=data).text)
+        url, params = self.url_builder.get_login_url(username, password)
+        response = json.loads(requests.post(url, data=params).text)
         if response["success"]:
             self.uid = response["auth_token"]["user_id"]
             self.token = response["auth_token"]["id"]
@@ -218,10 +218,10 @@ class DevAuth:
                         5 = devRant
                         6 = Random
         """
-        url, data = self.url_builder.get_post_rant_url(
-            body, tags, category, self.uid, self.token, self.key
+        url, params = self.url_builder.get_post_rant_url(
+            body, category, tags, self.uid, self.token, self.key
         )
-        response = json.loads(requests.post(url, data=data).text)
+        response = json.loads(requests.post(url, data=params).text)
         if response["success"]:
             return response["rant_id"]
         return None
@@ -234,10 +234,10 @@ class DevAuth:
             rand_id (int) : ID of the rant where comment  needs to be added
             body (str) : Body of comment
         """
-        url, data = self.url_builder.get_post_comment_url(
+        url, params = self.url_builder.get_post_comment_url(
             rant_id, body, self.uid, self.token, self.key
         )
-        response = json.loads(requests.post(url, data=data).text)
+        response = json.loads(requests.post(url, data=params).text)
         if response["success"]:
             return True
         return response["error"]
@@ -253,10 +253,10 @@ class DevAuth:
             mode (str) : Whether its a rant or a comment, default = rant
             value (int) : 1 = Upvote [default], 0 = Cancel Upvote, -1 = Downvote
         """
-        url, data = self.url_builder.get_vote_url(
+        url, params = self.url_builder.get_vote_url(
             ele_id, mode, value, self.uid, self.token, self.key
         )
-        response = json.loads(requests.post(url, data=data).text)
+        response = json.loads(requests.post(url, data=params).text)
         if response["success"]:
             return True
         return False
