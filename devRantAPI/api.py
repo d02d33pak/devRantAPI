@@ -240,7 +240,7 @@ class DevAuth:
         response = json.loads(requests.post(url, data=params).text)
         if response["success"]:
             return True
-        return response["error"]
+        return False
 
     def upvote(self, ele_id: int, mode: str = "rant", value: int = 1, reason: str = None):
         """
@@ -262,8 +262,8 @@ class DevAuth:
         print(url, params, end="\n")
         response = json.loads(requests.post(url, data=params).text)
         if response["success"]:
-            return response
-        return response
+            return True
+        return False
 
     def unvote(self, ele_id, mode: str = "rant"):
         """
@@ -316,7 +316,7 @@ class DevAuth:
         Optional Parameter:
             mode (str) : Whether its a rant/comment that being deleted, default = comment
         """
-        self.delete_rant(comment_id, mode)
+        return self.delete_rant(comment_id, mode)
 
     def get_notifs(self):
         """
