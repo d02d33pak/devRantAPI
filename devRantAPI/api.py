@@ -112,6 +112,8 @@ class DevRant:
 
         Parameters:
             user_id (int) : User ID
+
+        Optional Parameters:
             image_size (str) : Size of the avatar to be fetched [small/large]
         """
         response = self.get_user_profile(user_id)

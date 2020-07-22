@@ -1,7 +1,7 @@
 """
 Author: Deepak Talan
 Github: @d02d33pak
-all URLs
+Helper module to generate request urls
 """
 
 import time
