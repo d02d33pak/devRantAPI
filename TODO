@@ -1,0 +1,29 @@
+FUNCS:
+    [x] collab by id
+    [x] login
+    [x] post rant
+    [x] post comment
+    [x] vote
+    [x] get notifications
+    [x] clear notifications
+    [ ] discussion
+    [x] upvote
+    [x] downvote
+    [x] cancel vote
+
+API:
+    [ ] return proper error values
+    [ ] add image uploading while posting rant
+    [x] conver all functions from the 3 repos
+    [x] docString
+    [x] better docString
+        [x] for functions
+        [x] for classes
+        [x] for modules
+
+URLs:
+    [x] name functions properly
+
+README/APP:
+    [ ] add proper use case examples
+    [x] add all available functions table
