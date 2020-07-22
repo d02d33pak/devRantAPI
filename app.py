@@ -4,7 +4,6 @@ Github: @d02d33pak
 App.py
 """
 
-import time
 from devRantAPI.api import DevRant, DevAuth
 import utils
 
@@ -19,10 +18,10 @@ def run():
     auth = DevAuth()
 
     # GET MULTIPLE RANTS
-    rants = dev.get_rants("recent", 3, 0)
+    rants = dev.get_rants("recent", 1, 0)
     for rant in rants:
         print(rant["id"])
-        print(10 * "-")
+        print(7 * "-")
 
     # GET SINGLE RANT BY ID
     # rant = dev.get_rant_by_id(rant)
@@ -61,21 +60,29 @@ def run():
         print("comment posted on", rant)
 
     # VOTE ON RANT
-    print(auth.unvote(2791146))
-    print("UN voted")
-    # time.sleep(5)
+    # if auth.downvote(2791146, 0):
+    #     print("DOWN VOTED")
+    # if auth.downvote(2791146, 1):
+    #     print("DOWN VOTED")
+    # if auth.downvote(2791146, 2):
+    #     print("DOWN VOTED")
     # if auth.upvote(2791146):
     #     print("UP voted")
+    # if auth.unvote(2791146):
+    #     print("UN voted")
 
     # PRINT POSTED RANT
-    print(dev.get_rant_by_id(rant))
+    # print(dev.get_rant_by_id(rant)["id"])
+
+    # GET A RANDOM RANT
+    print(dev.get_surprise_rant())
 
     # DELETE COMMENT
     if auth.delete_rant(rant):
         print("deleted", rant)
 
     # GET NOTIFICATIONS
-    print(auth.get_notifs())
+    # print(auth.get_notifs())
 
 
 if __name__ == "__main__":

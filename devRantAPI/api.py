@@ -145,8 +145,8 @@ class DevRant:
             limit (int) : No. of rants to fetch, max = 50, default = 10
             skip (int) : No. of first N rants to skip, default = 0
         """
-        url = self.url_builder.get_collabs_url(skip, limit)
-        response = json.loads(requests.get(url).text)
+        url, params = self.url_builder.get_collabs_url(skip, limit)
+        response = json.loads(requests.get(url, params=params).text)
         if response["success"]:
             return response
         return None
@@ -158,7 +158,7 @@ class DevRant:
         Parameters:
             collab_id (int) : Rant ID of the collab
         """
-        self.get_rant_by_id(collab_id)
+        return self.get_rant_by_id(collab_id)
 
     def get_search_results(self, search_term: str):
         """
@@ -167,11 +167,21 @@ class DevRant:
         Parameters:
             search_term (str) : Search term to be looked up
         """
-        url = self.url_builder.get_search_url(search_term)
-        response = json.loads(requests.get(url).text)
+        url, params = self.url_builder.get_search_url(search_term)
+        response = json.loads(requests.get(url, params=params).text)
         if response["success"]:
             return response
         return None
+
+    def get_surprise_rant(self):
+        """
+        Returns a random rant from devRant
+        """
+        url, params = self.url_builder.get_surprise_url()
+        response = json.loads(requests.get(url, params=params).text)
+        if response["success"]:
+            return response["rant"]
+        return False
 
 
 class DevAuth:
@@ -242,7 +252,9 @@ class DevAuth:
             return True
         return False
 
-    def upvote(self, ele_id: int, mode: str = "rant", value: int = 1, reason: str = None):
+    def upvote(
+        self, ele_id: int, mode: str = "rant", value: int = 1, reason: str = None
+    ):
         """
         Returns True if Voting on rant/comment using its id, is done successfully.
 
@@ -259,7 +271,6 @@ class DevAuth:
         url, params = self.url_builder.get_vote_url(
             ele_id, mode, value, reason, self.uid, self.token, self.key
         )
-        print(url, params, end="\n")
         response = json.loads(requests.post(url, data=params).text)
         if response["success"]:
             return True

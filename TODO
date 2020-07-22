@@ -10,9 +10,10 @@ FUNCS:
     [x] upvote
     [x] downvote
     [x] cancel vote
+    [x] surprise rant
 
 API:
-    [ ] return proper error values
+    [ ] return proper error values/exceptions?
     [ ] add image uploading while posting rant
     [x] conver all functions from the 3 repos
     [x] docString

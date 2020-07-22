@@ -28,6 +28,7 @@ class URLs:
         self.weekly_rants = "devrant/weekly-rant"
         self.collabs = "devrant/collabs"
         self.search = "devrant/search"
+        self.surprise = "/surprise"
         # LOGIN RELATED
         self.login = "users/auth-token"
         self.notif = "users/me/notif-feed"
@@ -92,6 +93,12 @@ class URLs:
         url = f"{self.base_url}"
         return url, params
 
+    def get_surprise_url(self):
+        """Generate a request URL to fetch a random rant."""
+        params = self.create_params()
+        url = f"{self.base_url}{self.rants_url}{self.surprise}"
+        return url, params
+
     def validate_sort(self, sort):
         """Validate the provided sort method."""
         if sort in ["algo", "recent", "top"]:
@@ -137,7 +144,7 @@ class URLs:
         params = self.create_params(
             vote=value, user_id=uid, token_id=token, token_key=key
         )
-        if value == -1: # Provide reason for down voting
+        if value == -1:  # Provide reason for down voting
             params["reason"] = reason
         if mode == "rant":
             url = f"{self.base_url}{self.rants_url}/{ele_id}{self.vote_url}"
