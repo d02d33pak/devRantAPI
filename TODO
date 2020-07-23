@@ -6,7 +6,7 @@ FUNCS:
     [x] vote
     [x] get notifications
     [x] clear notifications
-    [ ] discussion
+    [ ] discussion/stories
     [x] upvote
     [x] downvote
     [x] cancel vote
@@ -26,5 +26,5 @@ URLs:
     [x] name functions properly
 
 README/APP:
-    [ ] add proper use case examples
+    [x] add proper use case examples
     [x] add all available functions table

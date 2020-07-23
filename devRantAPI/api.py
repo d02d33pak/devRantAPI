@@ -41,7 +41,7 @@ class DevRant:
         url, params = self.url_builder.get_rant_by_id_url(rant_id)
         response = json.loads(requests.get(url, params=params).text)
         if response["success"]:
-            return response["rant"]
+            return response
         return None
 
     def get_user_id(self, username: str):
@@ -123,7 +123,7 @@ class DevRant:
             return self.url_builder.get_user_avatar_url(response["avatar"]["i"])
         return None
 
-    def get_weekly_rant(self, sort: str = "algo", skip: int = 0):
+    def get_weekly_rant(self, sort: str = "top", skip: int = 0):
         """
         Returns a list of all weekly rants.
 
@@ -131,10 +131,10 @@ class DevRant:
             sort (str) : Sort rants by [algo, top, recent], default = algo
             skip (int) : No. of first N rants to skip, default = 0
         """
-        url = self.url_builder.get_weekly_url(sort, skip)
-        response = json.loads(requests.get(url).text)
+        url, params = self.url_builder.get_weekly_url(sort, skip)
+        response = json.loads(requests.get(url, params=params).text)
         if response["success"]:
-            return response
+            return response["rants"]
         return None
 
     def get_collabs(self, limit: int = 10, skip: int = 0):
@@ -148,7 +148,7 @@ class DevRant:
         url, params = self.url_builder.get_collabs_url(skip, limit)
         response = json.loads(requests.get(url, params=params).text)
         if response["success"]:
-            return response
+            return response["rants"]
         return None
 
     def get_collab_by_id(self, collab_id):
@@ -170,18 +170,18 @@ class DevRant:
         url, params = self.url_builder.get_search_url(search_term)
         response = json.loads(requests.get(url, params=params).text)
         if response["success"]:
-            return response
+            return response["results"]
         return None
 
     def get_surprise_rant(self):
         """
-        Returns a random rant from devRant
+        Returns a random rant from devRant.
         """
         url, params = self.url_builder.get_surprise_url()
         response = json.loads(requests.get(url, params=params).text)
         if response["success"]:
             return response["rant"]
-        return False
+        return None
 
 
 class DevAuth:
@@ -315,7 +315,9 @@ class DevAuth:
             rant_id, mode, self.uid, self.token, self.key
         )
         response = json.loads(requests.delete(url, params=params).text)
-        return response
+        if response["success"]:
+            return True
+        return False
 
     def delete_comment(self, comment_id: int, mode: str = "comment"):
         """
@@ -333,14 +335,17 @@ class DevAuth:
         """
         Returns list of unread user notifications.
         """
-        url = self.url_builder.get_notif_url(self.uid, self.token, self.key)
-        response = json.loads(requests.get(url).text)
-        return response
+        url, params = self.url_builder.get_notif_url(self.uid, self.token, self.key)
+        response = json.loads(requests.get(url, params=params).text)
+        if response["success"]:
+            return response["data"]
 
     def clear_notifs(self):
         """
         Returns True if user notifications are cleared successfully.
         """
-        url = self.url_builder.get_notif_url(self.uid, self.token, self.key)
-        response = json.loads(requests.delete(url).text)
-        return response
+        url, params = self.url_builder.get_notif_url(self.uid, self.token, self.key)
+        response = json.loads(requests.delete(url, params=params).text)
+        if response["success"]:
+            return True
+        return False

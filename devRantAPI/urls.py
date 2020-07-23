@@ -18,14 +18,14 @@ class URLs:
         self.plat = 3
         # RANT RELATED
         self.rants_url = "devrant/rants"
-        self.comment_url = "/comments"
+        self.comment_url = "comments"
         self.vote_url = "/vote"
         # USER RELATED
         self.user_id = "get-user-id"
         self.user_profile = "users/"
         self.user_avatar = "https://avatars.devrant.com/"
         # MISC
-        self.weekly_rants = "devrant/weekly-rant"
+        self.weekly_rants = "devrant/weekly-rants"
         self.collabs = "devrant/collabs"
         self.search = "devrant/search"
         self.surprise = "/surprise"
@@ -90,7 +90,7 @@ class URLs:
     def get_search_url(self, search_term):
         """Generate a request URL to search rants by keywords."""
         params = self.create_params(term=search_term)
-        url = f"{self.base_url}"
+        url = f"{self.base_url}{self.search}"
         return url, params
 
     def get_surprise_url(self):
@@ -136,7 +136,7 @@ class URLs:
         params = self.create_params(
             comment=body, user_id=uid, token_id=token, token_key=key
         )
-        url = f"{self.base_url}{self.rants_url}/{rant_id}{self.comment_url}"
+        url = f"{self.base_url}{self.rants_url}/{rant_id}/{self.comment_url}"
         return url, params
 
     def get_vote_url(self, ele_id, mode, value, reason, uid, token, key):
