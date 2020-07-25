@@ -4,8 +4,8 @@ Github: @d02d33pak
 Demo.py
 """
 
-from devRantAPI.api import DevRant, DevAuth
 import utils
+from devRantAPI.api import DevAuth, DevRant
 
 
 def run():
