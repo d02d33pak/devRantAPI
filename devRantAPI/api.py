@@ -196,7 +196,7 @@ class DevAuth:
         self.token = None
         self.key = None
 
-    def login(self, username: str, password: str):
+    def login(self, username: str, password: str) -> bool:
         """
         Returns True if Login to devRant is Successful.
 
@@ -238,7 +238,7 @@ class DevAuth:
             return response["rant_id"]
         return None
 
-    def post_comment(self, rant_id: int, body: str):
+    def post_comment(self, rant_id: int, body: str) -> bool:
         """
         Returns True if comment is posted on the rant successfully .
 
@@ -256,7 +256,7 @@ class DevAuth:
 
     def upvote(
         self, ele_id: int, mode: str = "rant", value: int = 1, reason: str = None
-    ):
+    ) -> bool:
         """
         Returns True if Voting on rant/comment using its id, is done successfully.
 
@@ -278,7 +278,7 @@ class DevAuth:
             return True
         return False
 
-    def unvote(self, ele_id, mode: str = "rant"):
+    def unvote(self, ele_id, mode: str = "rant") -> bool:
         """
         Returns True if Voting on rant/comment using its id, is done successfully.
 
@@ -290,7 +290,7 @@ class DevAuth:
         """
         return self.upvote(ele_id, mode, 0)
 
-    def downvote(self, ele_id, reason: int = 0, mode: str = "rant"):
+    def downvote(self, ele_id, reason: int = 0, mode: str = "rant") -> bool:
         """
         Returns True if DownVoted on rant/comment, using its id, successfully.
 
@@ -303,7 +303,7 @@ class DevAuth:
         """
         return self.upvote(ele_id, mode, -1, reason)
 
-    def delete_rant(self, rant_id: int, mode: str = "rant"):
+    def delete_rant(self, rant_id: int, mode: str = "rant") -> bool:
         """
         Returns True if rant is Deleted successfully.
 
@@ -321,7 +321,7 @@ class DevAuth:
             return True
         return False
 
-    def delete_comment(self, comment_id: int, mode: str = "comment"):
+    def delete_comment(self, comment_id: int, mode: str = "comment") -> bool:
         """
         Returns True if comment is Deleted successfully.
 
@@ -341,8 +341,10 @@ class DevAuth:
         response = json.loads(requests.get(url, params=params).text)
         if response["success"]:
             return response["data"]
+        else:
+            return None
 
-    def clear_notifs(self):
+    def clear_notifs(self) -> bool:
         """
         Returns True if user notifications are cleared successfully.
         """
